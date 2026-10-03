@@ -1,0 +1,64 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "helpdiff"
+dynamic = ["version"]
+description = "Diff the --help surface of any CLI between versions, and find the scripts that would break."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.9"
+authors = [{ name = "Nithin Selvaraj" }]
+keywords = ["cli", "breaking-changes", "diff", "help", "devtools", "semver", "ci"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: MacOS",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python :: 3",
+  "Topic :: Software Development :: Quality Assurance",
+  "Topic :: Software Development :: Testing",
+  "Typing :: Typed",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["ruff>=0.6", "mypy>=1.10", "pytest>=8"]
+
+[project.urls]
+Homepage = "https://github.com/Nithinfgs/helpdiff"
+Issues = "https://github.com/Nithinfgs/helpdiff/issues"
+Changelog = "https://github.com/Nithinfgs/helpdiff/blob/main/CHANGELOG.md"
+
+[project.scripts]
+helpdiff = "helpdiff.cli:main"
+
+[tool.setuptools.dynamic]
+version = { attr = "helpdiff.__version__" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+helpdiff = ["py.typed"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "C4", "SIM"]
+ignore = ["UP031", "UP032", "UP006", "UP007", "UP035", "UP045", "UP037", "SIM108", "B905"]
+
+[tool.mypy]
+strict = true
+files = ["src/helpdiff"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff.lint.per-file-ignores]
+"scripts/make_demo.py" = ["E501"]
