@@ -50,6 +50,33 @@ helpdiff diff terraform-1.8.json terraform-1.9.json --scripts .
 
 With `--scripts PATH…` it also scans your files and reports the exact lines that *the upgrade* broke: unknown flags and subcommands, values outside a flag's choices, missing values or required arguments. It reports only what is **new against the old snapshot**, so anything its shell parsing cannot understand cancels out instead of becoming noise.
 
+## A real one: `pip` 23.0 → 25.3
+
+No fixtures, nothing staged. This is the output of `helpdiff snap "python -m pip"` run against two real installs:
+
+```
+pip  23.0  →  25.3
+
+in 17 commands (pip, pip cache, pip check +14 more)
+  ✖ --no-python-version-warning was removed
+
+in 3 commands (pip download, pip install, pip wheel)
+  ✖ --global-option was removed
+  ✖ --use-pep517 was removed
+  ▲ default of --progress-bar changed: on -> auto
+
+pip install
+  ✖ --install-option was removed
+  ▲ default of --root-user-action changed: (none) -> warn
+
+pip wheel
+  ✖ --build-option was removed
+
+25 breaking, 5 warnings, 46 additions hidden (--all to show)
+```
+
+(The `25 breaking` counts repeat the same removals per subcommand; the list above collapses them. Any Dockerfile or CI job still passing `--install-option` is now broken: that is what `--scripts .` finds.)
+
 ## Commands
 
 | Command | Purpose |
