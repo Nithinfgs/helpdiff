@@ -1,0 +1,18 @@
+Fast search tool
+
+Usage: fd [OPTIONS] [PATTERN] [PATH]...
+
+Arguments:
+  [PATTERN]  the search pattern
+  [PATH]...  root directories
+
+Options:
+  -H, --hidden             Search hidden files
+      --color <WHEN>       When to use colors [default: auto] [possible values: auto, always, never]
+  -d, --max-depth <DEPTH>  Set maximum search depth
+  -h, --help               Print help
+  -V, --version            Print version
+
+Commands:
+  index   Build the index
+  help    Print this message or the help of the given subcommand(s)

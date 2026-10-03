@@ -1,0 +1,17 @@
+Work with pull requests.
+
+USAGE
+  tool pr list [flags]
+
+ALIASES
+  tool pr list, tool pr ls
+
+FLAGS
+  -a, --assignee string   Filter by assignee
+  -d, --draft             Filter by draft state
+  -L, --limit int         Maximum number of items to fetch (default 30)
+  -s, --state string      Filter by state: {open|closed|merged|all} (default "open")
+
+INHERITED FLAGS
+      --help              Show help for command
+  -R, --repo [HOST/]OWNER/REPO   Select another repository

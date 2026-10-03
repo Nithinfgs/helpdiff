@@ -1,0 +1,19 @@
+Manage things.
+
+Usage:
+  tool [command]
+
+Aliases:
+  tool, t
+
+Available Commands:
+  completion  Generate the autocompletion script
+  create      Create a thing
+  help        Help about any command
+  list        List things
+
+Flags:
+  -h, --help      help for tool
+      --verbose   verbose output
+
+Use "tool [command] --help" for more information about a command.

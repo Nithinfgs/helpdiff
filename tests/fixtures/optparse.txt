@@ -1,0 +1,13 @@
+
+Usage:   
+  pip <command> [options]
+
+Commands:
+  install                     Install packages.
+  uninstall                   Uninstall packages.
+  help                        Show help for commands.
+
+General Options:
+  -h, --help                  Show help.
+  -v, --verbose               Give more output. Option is additive, and can be used up to 3 times.
+  --timeout <sec>             Set the socket timeout (default 15 seconds).

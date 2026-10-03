@@ -1,0 +1,13 @@
+usage: acme [-h] [--version] [--config FILE] <command> ...
+
+Deploy and inspect services.
+
+options:
+  -h, --help     show this help message and exit
+  --version      show program's version number and exit
+  --config FILE  config file (default: acme.toml)
+
+commands:
+  <command>
+    deploy       deploy a service
+    status (st)  show service status

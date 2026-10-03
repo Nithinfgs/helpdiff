@@ -1,0 +1,10 @@
+Usage: mycli build [OPTIONS] SRC
+
+  Build the project.
+
+Options:
+  -o, --output PATH           Where to write results.  [default: dist]
+  --format [json|yaml|text]   Output format.
+  --color / --no-color        Colorize output.
+  -j, --jobs INTEGER          Parallel jobs.  [required]
+  --help                      Show this message and exit.

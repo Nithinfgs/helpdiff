@@ -1,0 +1,12 @@
+Usage: tool build [options] <dir>
+
+Build a directory
+
+Arguments:
+  dir                     directory to build
+
+Options:
+  -o, --out <path>        output path (default: "dist")
+  --mode <mode>           build mode (choices: "dev", "prod", default: "dev")
+  -w, --watch             rebuild on change
+  -h, --help              display help for command

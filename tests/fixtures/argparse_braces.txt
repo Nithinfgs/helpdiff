@@ -1,0 +1,10 @@
+usage: tool [-h] [-v] {build,test,release} ...
+
+positional arguments:
+  {build,test,release}
+    build               compile everything
+    test                run the tests
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         more output

@@ -1,0 +1,11 @@
+usage: acme deploy [-h] [-e {dev,staging,prod}] [-f] [--timeout TIMEOUT] target
+
+positional arguments:
+  target                service to deploy
+
+options:
+  -h, --help            show this help message and exit
+  -e {dev,staging,prod}, --env {dev,staging,prod}
+                        target environment
+  -f, --force           skip the confirmation prompt
+  --timeout TIMEOUT     seconds to wait (default: 30)
