@@ -1,0 +1,7 @@
+jobs:
+  smoke:
+    steps:
+      - run: acme deploy web --env dev --timeout 20
+      - run: |
+          acme status --json \
+            | jq '.services[]'

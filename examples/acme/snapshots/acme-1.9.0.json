@@ -1,0 +1,218 @@
+{
+  "format": 1,
+  "helpdiff": "0.1.0",
+  "name": "acme",
+  "command": [
+    "python3",
+    "acme_v1.py"
+  ],
+  "tool_version": "acme 1.9.0",
+  "commands": {
+    "": {
+      "summary": "Deploy and inspect services.",
+      "usage": "acme [-h] [--version] [--config FILE] <command> ...",
+      "subcommands": [
+        "deploy",
+        "logs",
+        "status",
+        "config"
+      ],
+      "flags": [
+        {
+          "names": [
+            "-h",
+            "--help"
+          ],
+          "description": "show this help message and exit"
+        },
+        {
+          "names": [
+            "--version"
+          ],
+          "description": "show program's version number and exit"
+        },
+        {
+          "names": [
+            "--config"
+          ],
+          "value": "FILE",
+          "default": "acme.toml",
+          "description": "config file (default: acme.toml)"
+        }
+      ]
+    },
+    "config": {
+      "summary": "inspect configuration",
+      "usage": "acme config [-h] <command> ...",
+      "subcommands": [
+        "get",
+        "list"
+      ],
+      "flags": [
+        {
+          "names": [
+            "-h",
+            "--help"
+          ],
+          "description": "show this help message and exit"
+        }
+      ]
+    },
+    "config get": {
+      "summary": "print a value",
+      "usage": "acme config get [-h] key",
+      "positionals": [
+        {
+          "name": "key",
+          "required": true,
+          "variadic": false
+        }
+      ],
+      "flags": [
+        {
+          "names": [
+            "-h",
+            "--help"
+          ],
+          "description": "show this help message and exit"
+        }
+      ]
+    },
+    "config list": {
+      "summary": "print all values",
+      "usage": "acme config list [-h]",
+      "flags": [
+        {
+          "names": [
+            "-h",
+            "--help"
+          ],
+          "description": "show this help message and exit"
+        }
+      ]
+    },
+    "deploy": {
+      "summary": "deploy a service",
+      "usage": "acme deploy [-h] [-e {dev,staging,prod}] [-f] [--timeout TIMEOUT] [-v] [--format {text,json}] target",
+      "positionals": [
+        {
+          "name": "target",
+          "required": true,
+          "variadic": false
+        }
+      ],
+      "flags": [
+        {
+          "names": [
+            "-h",
+            "--help"
+          ],
+          "description": "show this help message and exit"
+        },
+        {
+          "names": [
+            "-e",
+            "--env"
+          ],
+          "value": "{dev,staging,prod}",
+          "choices": [
+            "dev",
+            "staging",
+            "prod"
+          ],
+          "description": "target environment"
+        },
+        {
+          "names": [
+            "-f",
+            "--force"
+          ],
+          "description": "skip the confirmation prompt"
+        },
+        {
+          "names": [
+            "--timeout"
+          ],
+          "value": "TIMEOUT",
+          "default": "30",
+          "description": "seconds to wait (default: 30)"
+        },
+        {
+          "names": [
+            "-v",
+            "--verbose"
+          ],
+          "description": "print progress"
+        },
+        {
+          "names": [
+            "--format"
+          ],
+          "value": "{text,json}",
+          "choices": [
+            "text",
+            "json"
+          ],
+          "description": "output format"
+        }
+      ]
+    },
+    "logs": {
+      "summary": "stream service logs",
+      "usage": "acme logs [-h] [-n LINES] [--follow] service",
+      "positionals": [
+        {
+          "name": "service",
+          "required": true,
+          "variadic": false
+        }
+      ],
+      "flags": [
+        {
+          "names": [
+            "-h",
+            "--help"
+          ],
+          "description": "show this help message and exit"
+        },
+        {
+          "names": [
+            "-n",
+            "--lines"
+          ],
+          "value": "LINES",
+          "default": "100",
+          "description": "lines to show (default: 100)"
+        },
+        {
+          "names": [
+            "--follow"
+          ],
+          "description": "keep streaming"
+        }
+      ]
+    },
+    "status": {
+      "summary": "show service status",
+      "usage": "acme status [-h] [--json]",
+      "aliases": [
+        "st"
+      ],
+      "flags": [
+        {
+          "names": [
+            "-h",
+            "--help"
+          ],
+          "description": "show this help message and exit"
+        },
+        {
+          "names": [
+            "--json"
+          ],
+          "description": "machine-readable output"
+        }
+      ]
+    }
+  }
+}

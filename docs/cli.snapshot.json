@@ -1,0 +1,443 @@
+{
+  "format": 1,
+  "helpdiff": "0.1.0",
+  "name": "helpdiff",
+  "command": [
+    "helpdiff"
+  ],
+  "tool_version": "helpdiff 0.1.0",
+  "commands": {
+    "": {
+      "summary": "Diff the --help surface of a command-line tool between versions, and find the scripts that would break.",
+      "usage": "helpdiff [-h] [--version] COMMAND ...",
+      "subcommands": [
+        "snap",
+        "diff",
+        "verify",
+        "check",
+        "show",
+        "parse"
+      ],
+      "flags": [
+        {
+          "names": [
+            "-h",
+            "--help"
+          ],
+          "description": "show this help message and exit"
+        },
+        {
+          "names": [
+            "--version"
+          ],
+          "description": "show program's version number and exit"
+        }
+      ]
+    },
+    "check": {
+      "summary": "Scan shell scripts, Makefiles, CI YAML, Dockerfiles and Markdown code blocks.",
+      "usage": "helpdiff check [-h] [--format {text,json}] [--color {auto,always,never}] snapshot PATH [PATH ...]",
+      "positionals": [
+        {
+          "name": "snapshot",
+          "required": true,
+          "variadic": false
+        },
+        {
+          "name": "PATH",
+          "required": true,
+          "variadic": false
+        },
+        {
+          "name": "PATH",
+          "required": false,
+          "variadic": true
+        }
+      ],
+      "flags": [
+        {
+          "names": [
+            "-h",
+            "--help"
+          ],
+          "description": "show this help message and exit"
+        },
+        {
+          "names": [
+            "--format"
+          ],
+          "value": "{text,json}",
+          "choices": [
+            "text",
+            "json"
+          ]
+        },
+        {
+          "names": [
+            "--color"
+          ],
+          "value": "{auto,always,never}",
+          "choices": [
+            "auto",
+            "always",
+            "never"
+          ]
+        }
+      ]
+    },
+    "diff": {
+      "summary": "Compare two snapshots; exits 1 if anything breaking changed.",
+      "usage": "helpdiff diff [-h] [--scripts PATH [PATH ...]] [--format {text,markdown,json}] [--fail-on {breaking,warning,never}] [--all] [--color {auto,always,never}] old new",
+      "positionals": [
+        {
+          "name": "old",
+          "required": true,
+          "variadic": false
+        },
+        {
+          "name": "new",
+          "required": true,
+          "variadic": false
+        }
+      ],
+      "flags": [
+        {
+          "names": [
+            "-h",
+            "--help"
+          ],
+          "description": "show this help message and exit"
+        },
+        {
+          "names": [
+            "--scripts"
+          ],
+          "value": "PATH [PATH ...]",
+          "description": "files/directories to scan for uses of anything that broke"
+        },
+        {
+          "names": [
+            "--format"
+          ],
+          "value": "{text,markdown,json}",
+          "choices": [
+            "text",
+            "markdown",
+            "json"
+          ]
+        },
+        {
+          "names": [
+            "--fail-on"
+          ],
+          "value": "{breaking,warning,never}",
+          "choices": [
+            "breaking",
+            "warning",
+            "never"
+          ],
+          "default": "breaking",
+          "description": "exit 1 when a change at this level is found (default: breaking)"
+        },
+        {
+          "names": [
+            "--all"
+          ],
+          "description": "also list additions"
+        },
+        {
+          "names": [
+            "--color"
+          ],
+          "value": "{auto,always,never}",
+          "choices": [
+            "auto",
+            "always",
+            "never"
+          ]
+        }
+      ]
+    },
+    "parse": {
+      "summary": "parse one saved help text and print the result (for debugging)",
+      "usage": "helpdiff parse [-h] [--known KNOWN] file",
+      "positionals": [
+        {
+          "name": "file",
+          "required": true,
+          "variadic": false
+        }
+      ],
+      "flags": [
+        {
+          "names": [
+            "-h",
+            "--help"
+          ],
+          "description": "show this help message and exit"
+        },
+        {
+          "names": [
+            "--known"
+          ],
+          "value": "KNOWN",
+          "description": "leading usage words to ignore, e.g. the program name"
+        }
+      ]
+    },
+    "show": {
+      "summary": "list the commands in a snapshot",
+      "usage": "helpdiff show [-h] snapshot",
+      "positionals": [
+        {
+          "name": "snapshot",
+          "required": true,
+          "variadic": false
+        }
+      ],
+      "flags": [
+        {
+          "names": [
+            "-h",
+            "--help"
+          ],
+          "description": "show this help message and exit"
+        }
+      ]
+    },
+    "snap": {
+      "summary": "Run `<command> [subcommand ...] --help` recursively and save the parsed surface.",
+      "usage": "helpdiff snap [-h] [-o OUTPUT] [--name NAME] [--help-flag FLAG] [--max-depth MAX_DEPTH] [--max-commands MAX_COMMANDS] [--timeout TIMEOUT] [--jobs JOBS] [--skip PATH] [-q] command",
+      "positionals": [
+        {
+          "name": "command",
+          "required": true,
+          "variadic": false
+        }
+      ],
+      "flags": [
+        {
+          "names": [
+            "-h",
+            "--help"
+          ],
+          "description": "show this help message and exit"
+        },
+        {
+          "names": [
+            "-o",
+            "--output"
+          ],
+          "value": "OUTPUT",
+          "default": "stdout",
+          "description": "write snapshot here (default: stdout)"
+        },
+        {
+          "names": [
+            "--name"
+          ],
+          "value": "NAME",
+          "default": "derived from the command",
+          "description": "name scripts use to invoke the tool (default: derived from the command)"
+        },
+        {
+          "names": [
+            "--help-flag"
+          ],
+          "value": "FLAG",
+          "default": "--help, then -h",
+          "description": "flag that prints help; repeatable (default: --help, then -h)"
+        },
+        {
+          "names": [
+            "--max-depth"
+          ],
+          "value": "MAX_DEPTH",
+          "default": "4",
+          "description": "how deep to follow subcommands (default: 4)"
+        },
+        {
+          "names": [
+            "--max-commands"
+          ],
+          "value": "MAX_COMMANDS",
+          "default": "400",
+          "description": "stop after this many commands (default: 400)"
+        },
+        {
+          "names": [
+            "--timeout"
+          ],
+          "value": "TIMEOUT",
+          "default": "10",
+          "description": "seconds to wait per help call (default: 10)"
+        },
+        {
+          "names": [
+            "--jobs"
+          ],
+          "value": "JOBS",
+          "default": "8",
+          "description": "parallel help calls (default: 8)"
+        },
+        {
+          "names": [
+            "--skip"
+          ],
+          "value": "PATH",
+          "description": "do not crawl this subcommand path, e.g. --skip \"extension\"; repeatable"
+        },
+        {
+          "names": [
+            "-q",
+            "--quiet"
+          ],
+          "description": "no progress output"
+        }
+      ]
+    },
+    "verify": {
+      "summary": "Crawl the tool and compare with a snapshot file; use --update to refresh it.",
+      "usage": "helpdiff verify [-h] --snapshot SNAPSHOT [--update] [--name NAME] [--help-flag FLAG] [--max-depth MAX_DEPTH] [--max-commands MAX_COMMANDS] [--timeout TIMEOUT] [--jobs JOBS] [--skip PATH] [-q] [--scripts PATH [PATH ...]] [--format {text,markdown,json}] [--fail-on {breaking,warning,never}] [--all] [--color {auto,always,never}] command",
+      "positionals": [
+        {
+          "name": "SNAPSHOT",
+          "required": true,
+          "variadic": false
+        }
+      ],
+      "flags": [
+        {
+          "names": [
+            "-h",
+            "--help"
+          ],
+          "description": "show this help message and exit"
+        },
+        {
+          "names": [
+            "--snapshot"
+          ],
+          "value": "SNAPSHOT",
+          "description": "snapshot file to compare with"
+        },
+        {
+          "names": [
+            "--update"
+          ],
+          "description": "overwrite the snapshot with the live surface"
+        },
+        {
+          "names": [
+            "--name"
+          ],
+          "value": "NAME",
+          "default": "derived from the command",
+          "description": "name scripts use to invoke the tool (default: derived from the command)"
+        },
+        {
+          "names": [
+            "--help-flag"
+          ],
+          "value": "FLAG",
+          "default": "--help, then -h",
+          "description": "flag that prints help; repeatable (default: --help, then -h)"
+        },
+        {
+          "names": [
+            "--max-depth"
+          ],
+          "value": "MAX_DEPTH",
+          "default": "4",
+          "description": "how deep to follow subcommands (default: 4)"
+        },
+        {
+          "names": [
+            "--max-commands"
+          ],
+          "value": "MAX_COMMANDS",
+          "default": "400",
+          "description": "stop after this many commands (default: 400)"
+        },
+        {
+          "names": [
+            "--timeout"
+          ],
+          "value": "TIMEOUT",
+          "default": "10",
+          "description": "seconds to wait per help call (default: 10)"
+        },
+        {
+          "names": [
+            "--jobs"
+          ],
+          "value": "JOBS",
+          "default": "8",
+          "description": "parallel help calls (default: 8)"
+        },
+        {
+          "names": [
+            "--skip"
+          ],
+          "value": "PATH",
+          "description": "do not crawl this subcommand path, e.g. --skip \"extension\"; repeatable"
+        },
+        {
+          "names": [
+            "-q",
+            "--quiet"
+          ],
+          "description": "no progress output"
+        },
+        {
+          "names": [
+            "--scripts"
+          ],
+          "value": "PATH [PATH ...]",
+          "description": "files/directories to scan for uses of anything that broke"
+        },
+        {
+          "names": [
+            "--format"
+          ],
+          "value": "{text,markdown,json}",
+          "choices": [
+            "text",
+            "markdown",
+            "json"
+          ]
+        },
+        {
+          "names": [
+            "--fail-on"
+          ],
+          "value": "{breaking,warning,never}",
+          "choices": [
+            "breaking",
+            "warning",
+            "never"
+          ],
+          "default": "breaking",
+          "description": "exit 1 when a change at this level is found (default: breaking)"
+        },
+        {
+          "names": [
+            "--all"
+          ],
+          "description": "also list additions"
+        },
+        {
+          "names": [
+            "--color"
+          ],
+          "value": "{auto,always,never}",
+          "choices": [
+            "auto",
+            "always",
+            "never"
+          ]
+        }
+      ]
+    }
+  }
+}
