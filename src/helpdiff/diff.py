@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from difflib import SequenceMatcher
 from typing import Callable, Dict, List, Optional, Tuple
@@ -39,6 +40,15 @@ class Change:
         if self.extra:
             out["extra"] = self.extra
         return out
+
+
+def _norm_default(d: Optional[str]) -> Optional[str]:
+    """Ignore unit words after a number, so "5 times" and "5" are the same default."""
+    if d is None:
+        return None
+    d = d.strip().strip("\"'").lower()
+    m = re.match(r"^(-?\d+(?:\.\d+)?)\s+[a-z]+$", d)
+    return m.group(1) if m else d
 
 
 def _sim(a: str, b: str) -> float:
@@ -127,7 +137,7 @@ def _flag_changes(cmd_key: str, o: Flag, n: Flag, out: List[Change]) -> None:
                 "%s is now restricted to: %s" % (label, ", ".join(n.choices)),
             )
         )
-    if o.default != n.default and (o.default is not None or n.default is not None):
+    if _norm_default(o.default) != _norm_default(n.default) and (o.default is not None or n.default is not None):
         out.append(
             Change(
                 WARNING,

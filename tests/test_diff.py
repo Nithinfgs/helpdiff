@@ -106,3 +106,26 @@ class DiffTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class RenderAndNormaliseTests(unittest.TestCase):
+    def test_unit_words_in_defaults_are_not_a_change(self):
+        old = snap(root([Flag(["--retries"], value="int", default="5 times")]))
+        new = snap(root([Flag(["--retries"], value="int", default="5")]))
+        self.assertEqual(diff_snapshots(old, new), [])
+
+    def test_shared_changes_collapse_into_one_section(self):
+        from helpdiff.render import sections
+
+        subs = ["a", "b", "c", "d"]
+        old = snap(
+            root(subs=subs),
+            *[Command(path=[s], flags=[Flag(["--shared"]), Flag(["--own-" + s])]) for s in subs],
+        )
+        new = snap(root(subs=subs), *[Command(path=[s]) for s in subs])
+        secs = sections(diff_snapshots(old, new), "t")
+        titles = [t for t, _ in secs]
+        self.assertTrue(titles[0].startswith("in 4 commands"))
+        self.assertEqual([c.subject for c in secs[0][1]], ["--shared"])
+        self.assertEqual(titles[1:], ["t a", "t b", "t c", "t d"])
+        self.assertTrue(all(len(items) == 1 for _, items in secs[1:]))

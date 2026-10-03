@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 from collections import OrderedDict
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Set, Tuple
 
 from .check import Finding
 from .diff import BREAKING, INFO, WARNING, Change
@@ -31,6 +31,33 @@ class Painter:
         if not self.color:
             return text
         return "".join(_STYLE[s] for s in styles) + text + _STYLE["reset"]
+
+
+def sections(changes: List[Change], name: str, min_shared: int = 3) -> List[Tuple[str, List[Change]]]:
+    """Group changes by command; identical changes repeated across many commands (e.g. a shared
+    "General Options" block) are collapsed into one section instead of repeating everywhere."""
+    by_key: Dict[Tuple[str, str, str, str], List[Change]] = {}
+    for c in changes:
+        by_key.setdefault((c.severity, c.kind, c.subject, c.message), []).append(c)
+    shared_ids: Set[int] = set()
+    shared: "OrderedDict[Tuple[str, ...], List[Change]]" = OrderedDict()
+    for items in by_key.values():
+        if len(items) >= min_shared and items[0].kind.startswith(("flag", "choice", "default", "value")):
+            cmds = tuple(sorted({i.command for i in items}))
+            shared.setdefault(cmds, []).append(items[0])
+            shared_ids.update(id(i) for i in items)
+    out: List[Tuple[str, List[Change]]] = []
+    for cmds, items in shared.items():
+        shown = [(name + " " + c).strip() for c in cmds[:3]]
+        more = " +%d more" % (len(cmds) - 3) if len(cmds) > 3 else ""
+        out.append(("in %d commands (%s%s)" % (len(cmds), ", ".join(shown), more), items))
+    grouped: "OrderedDict[str, List[Change]]" = OrderedDict()
+    for c in changes:
+        if id(c) not in shared_ids:
+            grouped.setdefault(c.command, []).append(c)
+    for cmd, items in grouped.items():
+        out.append(((name + " " + cmd).strip(), items))
+    return out
 
 
 def counts(changes: List[Change]) -> Dict[str, int]:
@@ -61,11 +88,8 @@ def render_text(
     p = Painter(color)
     lines: List[str] = [p(_header(old, new), "bold"), ""]
     shown = [c for c in changes if show_info or c.severity != INFO]
-    grouped: "OrderedDict[str, List[Change]]" = OrderedDict()
-    for c in shown:
-        grouped.setdefault(c.command, []).append(c)
-    for cmd, items in grouped.items():
-        lines.append(p("%s %s" % (new.name or old.name, cmd) if cmd else (new.name or old.name), "cyan", "bold"))
+    for title, items in sections(shown, new.name or old.name):
+        lines.append(p(title, "cyan", "bold"))
         for c in items:
             mark, col = _MARK[c.severity]
             row = "  %s %s" % (p(mark, col), c.message)
@@ -119,12 +143,12 @@ def render_markdown(
             if not items or (sev == INFO and not show_info):
                 continue
             out.append("#### %s" % title)
-            for c in items:
-                where = "`%s %s`" % (name, c.command) if c.command else "`%s`" % name
-                row = "- %s: %s" % (where, c.message)
-                if c.hint:
-                    row += " _(%s)_" % c.hint
-                out.append(row)
+            for title, group in sections(items, name):
+                for c in group:
+                    row = "- `%s`: %s" % (title, c.message)
+                    if c.hint:
+                        row += " _(%s)_" % c.hint
+                    out.append(row)
             out.append("")
     if impact is not None:
         out.append("#### Affected scripts")

@@ -205,7 +205,7 @@ def _check_tokens(snap: Snapshot, tokens: List[str]) -> List[Problem]:
                 found = _lookup(node, name)
                 if found is None:
                     names = [n for f in node.flags for n in f.long_names]
-                    close = get_close_matches(name, names, n=1, cutoff=0.75)
+                    close = get_close_matches(name, names, n=1, cutoff=0.85)
                     add("unknown-flag", name, "did you mean %s?" % close[0] if close else None)
                 elif _needs_value(found):
                     if eq:

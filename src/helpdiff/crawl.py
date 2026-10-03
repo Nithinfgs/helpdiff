@@ -8,6 +8,7 @@ the tool being crawled, so only crawl tools you already trust to run.
 from __future__ import annotations
 
 import os
+import re
 import subprocess
 from concurrent.futures import ThreadPoolExecutor
 from typing import Callable, Dict, List, Optional, Sequence, Set, Tuple
@@ -103,7 +104,8 @@ def _version(argv: Sequence[str], timeout: float) -> Optional[str]:
         return None
     lines = strip_ansi(proc.stdout.decode("utf-8", "replace")).strip().splitlines()
     if proc.returncode == 0 and lines and len(lines[0]) < 200:
-        return lines[0].strip()
+        # "pip 25.3 from /path/to/site-packages/pip (python 3.12)" -> "pip 25.3"
+        return re.split(r"\s+from\s+(?=/|~|[A-Za-z]:\\)", lines[0].strip())[0]
     return None
 
 
